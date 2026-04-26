@@ -1,36 +1,74 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Pastel POS System 🛒🍊
 
-## Getting Started
+A modern, responsive, and mobile-friendly Point of Sale (POS) system built with Next.js, Prisma, and PostgreSQL. It features real-time order tracking, stock management, promotion logic, and a secure admin dashboard.
 
-First, run the development server:
+## 📋 Prerequisites
 
+Before you begin, make sure you have the following installed on your machine:
+- **Node.js** (v18 or higher)
+- **pnpm** (or npm/yarn)
+- **PostgreSQL** database running locally or remotely
+
+---
+
+## 🚀 Setup Instructions
+
+### 1. Clone & Install Dependencies
+First, clone the project and install all the required packages:
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+pnpm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 2. Configure Environment Variables
+Create a `.env` file in the root of the project and configure your database connection and admin token:
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+```env
+# Database connection string
+# Format: postgresql://USER:PASSWORD@HOST:PORT/DATABASE
+DATABASE_URL="postgresql://postgres:password@localhost:5433/pos_db?schema=public"
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+# Token used to access the secure admin dashboard
+ADMIN_TOKEN="admin123"
+```
 
-## Learn More
+### 3. Setup the Database
+Synchronize your Prisma schema with your PostgreSQL database:
 
-To learn more about Next.js, take a look at the following resources:
+Generate the Prisma Client (required for Next.js to interact with the DB):
+```bash
+pnpm prisma generate
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Push the database schema to your PostgreSQL server (this creates the required tables):
+```bash
+pnpm prisma db push
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### 4. Start the Development Server
+You are ready to go! Start the Next.js development server:
+```bash
+pnpm dev
+```
 
-## Deploy on Vercel
+Open your browser and navigate to `http://localhost:3000`.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+---
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 🔒 Accessing the Admin Dashboard
+
+The admin dashboard is protected by a middleware token system. 
+
+To access it for the first time, you must append your `ADMIN_TOKEN` (from your `.env` file) to the URL:
+👉 **`http://localhost:3000/admin?token=admin123`**
+
+Once you visit this URL, the system will securely store a cookie in your browser for 7 days. After that, you can simply visit `http://localhost:3000/admin` without needing the token.
+
+---
+
+## 📁 Key Features Overview
+
+- **Customer Flow (`/`)**: Customers enter their nickname and contact info, select items from the menu, and checkout. They can track their order later using their Order ID.
+- **Menu & Promotions (`/menu`)**: Dynamic item list with real-time stock limits. Orders over 50฿ trigger a special random free premium item promotion (`/promotion`).
+- **Checkout & Payment**: Customers can choose "Pay Now" (uploads a payment slip) or "Pay on Delivery".
+- **Admin Dashboard (`/admin`)**: Secure panel to accept orders, verify payment slips, update order statuses, and manage inventory stock. Items subtracted from stock automatically upon checkout.
+- **Theming**: Fully responsive, mobile-optimized UI featuring a warm, pastel orange aesthetic. 
