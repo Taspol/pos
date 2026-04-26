@@ -71,7 +71,9 @@ export const translations = {
     upload_slip: "Upload Payment Slip",
     change_slip: "Change Payment Slip",
     slip_uploaded: "Slip uploaded",
-    pay_on_delivery: "PAY ON DELIVERY"
+    pay_on_delivery: "PAY ON DELIVERY",
+    available: "Available",
+    out_of_stock: "Out of Stock",
   },
   th: {
     shop_name: "ชื่อร้าน",
@@ -94,7 +96,7 @@ export const translations = {
     total: "ยอดรวม",
     receive_method: "วิธีรับสินค้า",
     delivery: "เดลิเวอรี่",
-    pickup: "รับเองที่ร้าน",
+    pickup: "รับเองที่ร้าน (บูธ C31 ตึก SOLA ชั้น 1)",
     payment_option: "วิธีชำระเงิน",
     pay_now: "จ่ายตอนนี้ (โอนเงิน / QR)",
     pay_later: "จ่ายทีหลัง (เมื่อได้รับสินค้า)",
@@ -137,7 +139,7 @@ export const translations = {
     select_location: "เลือกตำแหน่งที่ตั้ง",
     get_my_location: "ระบุตำแหน่งปัจจุบันของฉัน",
     promotion_title: "โปรโมชั่นพิเศษ! 🎉",
-    promotion_desc: "คุณสั่งซื้อเกิน 50 ฿! คลิกปุ่มด้านล่างเพื่อสุ่มรับสินค้าพรีเมียมฟรี",
+    promotion_desc: "สั่งซื้อเกิน 50 ฿! สุ่มรับสินค้าพรีเมียมฟรี",
     random_btn: "สุ่มของแถมเลย!",
     congrats: "ยินดีด้วย! คุณได้รับ:",
     free: "ฟรี",
@@ -145,7 +147,9 @@ export const translations = {
     upload_slip: "อัปโหลดหลักฐานการโอน",
     change_slip: "เปลี่ยนรูปหลักฐาน",
     slip_uploaded: "อัปโหลดสำเร็จ",
-    pay_on_delivery: "เก็บเงินปลายทาง"
+    pay_on_delivery: "เก็บเงินปลายทาง",
+    available: "คงเหลือ",
+    out_of_stock: "สินค้าหมด",
   }
 };
 

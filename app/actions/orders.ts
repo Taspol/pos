@@ -71,28 +71,46 @@ export async function getOrderById(id: string) {
 }
 
 export async function createOrder(data: Omit<Order, 'id' | 'status' | 'timestamp'>) {
-  const order = await prisma.order.create({
-    data: {
-      customerNickname: data.customer.nickname,
-      customerContact: data.customer.contact,
-      total: data.total,
-      receiveMethod: data.receiveMethod,
-      paymentOption: data.paymentOption,
-      lat: data.lat,
-      lng: data.lng,
-      locationDetail: data.locationDetail,
-      items: {
-        create: data.items.map(item => ({
-          itemId: item.id,
-          quantity: item.quantity,
-          priceAtPurchase: item.price
-        }))
+  const result = await prisma.$transaction(async (tx) => {
+    // 1. Create the order
+    const order = await tx.order.create({
+      data: {
+        customerNickname: data.customer.nickname,
+        customerContact: data.customer.contact,
+        total: data.total,
+        receiveMethod: data.receiveMethod,
+        paymentOption: data.paymentOption,
+        lat: data.lat,
+        lng: data.lng,
+        locationDetail: data.locationDetail,
+        items: {
+          create: data.items.map(item => ({
+            itemId: item.id,
+            quantity: item.quantity,
+            priceAtPurchase: item.price
+          }))
+        }
       }
+    });
+
+    // 2. Update stock for each item
+    for (const item of data.items) {
+      await tx.item.update({
+        where: { id: item.id },
+        data: {
+          stock: {
+            decrement: item.quantity
+          }
+        }
+      });
     }
+
+    return order;
   });
   
   revalidatePath('/admin/orders');
-  return order.id;
+  revalidatePath('/admin/items');
+  return result.id;
 }
 
 export async function updateOrderStatus(orderId: string, status: OrderStatus) {
