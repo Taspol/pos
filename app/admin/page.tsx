@@ -10,8 +10,8 @@ export default function AdminOrders() {
     <div>
       <div className="flex flex-col-mobile justify-between items-center mb-6 gap-4">
         <h1 style={{ marginBottom: 0 }}>Incoming Orders</h1>
-        <Link href="/admin/items" className="btn-primary">
-          ⚙️ {t('manage_items')}
+        <Link href="/admin/items" className="">
+          {t('manage_items')}
         </Link>
       </div>
 
