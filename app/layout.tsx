@@ -14,8 +14,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Gravity POS",
-  description: "Simple and elegant Point of Sale system",
+  title: "BuchaShabu",
+  description: "shabu for everyone",
 };
 
 import Header from "@/components/Header";
