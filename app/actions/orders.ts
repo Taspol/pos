@@ -4,8 +4,9 @@ import prisma from '@/lib/prisma';
 import { Order, OrderStatus } from '@/types';
 import { revalidatePath } from 'next/cache';
 import { OrderStatus as PrismaOrderStatus } from '@prisma/client';
-import { writeFile } from 'fs/promises';
+import { writeFile, mkdir } from 'fs/promises';
 import { join } from 'path';
+import { existsSync } from 'fs';
 
 export async function getOrders() {
   const orders = await prisma.order.findMany({
@@ -133,10 +134,16 @@ export async function uploadSlip(orderId: string, formData: FormData) {
   const buffer = Buffer.from(bytes);
 
   const filename = `${orderId}-${Date.now()}-${file.name.replace(/\s+/g, '_')}`;
-  const path = join(process.cwd(), 'public/payment_slips', filename);
+  const dir = join(process.cwd(), 'uploads/payment_slips');
+  
+  if (!existsSync(dir)) {
+    await mkdir(dir, { recursive: true });
+  }
+
+  const path = join(dir, filename);
   await writeFile(path, buffer);
 
-  const slipPath = `/payment_slips/${filename}`;
+  const slipPath = `/api/slips/${filename}`;
   await prisma.order.update({
     where: { id: orderId },
     data: { slipPath }

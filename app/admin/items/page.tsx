@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { usePOS } from '@/context/POSContext';
 import { getDirectImageUrl } from '@/lib/utils';
 import { Item } from '@/types';
+import Link from 'next/link';
 
 export default function AdminItems() {
   const { items, addItem, updateItem, t } = usePOS();
@@ -49,15 +50,20 @@ export default function AdminItems() {
 
   return (
     <div>
-      <div className="flex justify-between items-center mb-4">
+      <div className="flex flex-col-mobile justify-between items-center mb-4 gap-4">
         <h1>{t('manage_items')}</h1>
-        <button className="btn-primary" onClick={() => {
-          setShowAdd(!showAdd);
-          setEditingItem(null);
-          setFormData({ name: '', price: 0, stock: 0, photo: '', description: '' });
-        }}>
-          {showAdd ? t('go_back') : `+ ${t('add_to_cart').split(' ')[0]} ${t('items')}`}
-        </button>
+        <div className="flex gap-2">
+          <Link href="/admin" className="btn-outline">
+            ← Orders
+          </Link>
+          <button className="btn-primary" onClick={() => {
+            setShowAdd(!showAdd);
+            setEditingItem(null);
+            setFormData({ name: '', price: 0, stock: 0, photo: '', description: '' });
+          }}>
+            {showAdd ? t('go_back') : `+ ${t('items')}`}
+          </button>
+        </div>
       </div>
 
       {showAdd && (
@@ -91,24 +97,25 @@ export default function AdminItems() {
 
       <div className="grid">
         {items.map(item => (
-          <div key={item.id} className="card flex gap-4 items-center">
+          <div key={item.id} className="card flex flex-col-mobile gap-4 items-center">
             <div style={{ 
               width: '100px', 
               height: '100px', 
+              minWidth: '100px',
               borderRadius: 'var(--radius)',
               overflow: 'hidden'
-            }}>
+            }} className="mobile-full-width">
               <img 
                 src={getDirectImageUrl(item.photo)} 
                 alt={item.name}
                 style={{ width: '100%', height: '100%', objectFit: 'cover' }}
               />
             </div>
-            <div style={{ flex: 1 }}>
+            <div style={{ flex: 1, textAlign: 'inherit' }}>
               <h3 style={{ marginBottom: 0 }}>{item.name}</h3>
               <p style={{ color: 'var(--secondary)', fontSize: '0.9rem' }}>฿{item.price} | Stock: {item.stock}</p>
             </div>
-            <button className="btn-outline" onClick={() => startEdit(item)}>Edit</button>
+            <button className="btn-outline w-mobile-full" onClick={() => startEdit(item)}>Edit</button>
           </div>
         ))}
       </div>

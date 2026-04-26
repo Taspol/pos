@@ -4,11 +4,16 @@ import { usePOS } from '@/context/POSContext';
 import Link from 'next/link';
 
 export default function AdminOrders() {
-  const { orders, updateOrderStatus } = usePOS();
-
+  const { orders, updateOrderStatus, t } = usePOS();
+  
   return (
     <div>
-      <h1 className="mb-4">Incoming Orders</h1>
+      <div className="flex flex-col-mobile justify-between items-center mb-6 gap-4">
+        <h1 style={{ marginBottom: 0 }}>Incoming Orders</h1>
+        <Link href="/admin/items" className="btn-primary">
+          ⚙️ {t('manage_items')}
+        </Link>
+      </div>
       
       {orders.length === 0 ? (
         <div className="card" style={{ textAlign: 'center', padding: '4rem' }}>
