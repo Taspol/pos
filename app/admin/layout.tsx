@@ -19,29 +19,17 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
   ];
 
   return (
-    <div className="flex" style={{ minHeight: '100vh' }}>
-      <aside style={{ 
-        width: '260px', 
-        background: 'var(--card-bg)', 
-        borderRight: '1px solid var(--border)',
-        padding: '2rem 1rem'
-      }}>
-        <h2 style={{ padding: '0 1rem', color: 'var(--primary)', marginBottom: '2rem' }}>Admin Panel</h2>
-        <nav className="flex flex-col gap-2">
+    <div className="admin-container">
+      <aside className="admin-sidebar">
+        <h2 className="admin-logo">Admin</h2>
+        <nav className="admin-nav">
           {navItems.map(item => {
             const isActive = pathname === item.path;
             return (
               <Link 
                 key={item.path} 
                 href={item.path}
-                style={{
-                  padding: '0.75rem 1rem',
-                  borderRadius: 'var(--radius)',
-                  background: isActive ? 'var(--primary)' : 'transparent',
-                  color: isActive ? 'white' : 'var(--foreground)',
-                  fontWeight: '600',
-                  textDecoration: 'none'
-                }}
+                className={`admin-nav-link ${isActive ? 'active' : ''}`}
               >
                 {item.name}
               </Link>
@@ -49,7 +37,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
           })}
         </nav>
       </aside>
-      <main style={{ flex: 1, padding: '2rem' }}>
+      <main className="admin-main">
         {children}
       </main>
     </div>

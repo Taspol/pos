@@ -21,7 +21,7 @@ export default function AdminOrders() {
         </div>
       ) : (
         <div className="flex flex-col gap-4">
-          {[...orders].reverse().map(order => (
+          {orders.map(order => (
             <div key={order.id} className="card flex flex-col-mobile justify-between items-center">
               <div>
                 <h3 style={{ marginBottom: '0.25rem' }}>Order {order.id}</h3>

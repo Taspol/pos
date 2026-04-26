@@ -95,16 +95,16 @@ export default function AdminItems() {
         </div>
       )}
 
-      <div className="grid">
+      <div className="flex flex-col gap-4">
         {items.map(item => (
-          <div key={item.id} className="card flex flex-col-mobile gap-4 items-center">
+          <div key={item.id} className="card flex flex-col-mobile gap-12 items-center" style={{ padding: '1.5rem 2rem' }}>
             <div style={{ 
-              width: '100px', 
-              height: '100px', 
-              minWidth: '100px',
+              width: '120px', 
+              height: '120px', 
+              minWidth: '120px',
               borderRadius: 'var(--radius)',
               overflow: 'hidden'
-            }} className="mobile-full-width">
+            }} className="mobile-full-width ">
               <img 
                 src={getDirectImageUrl(item.photo)} 
                 alt={item.name}
@@ -112,8 +112,13 @@ export default function AdminItems() {
               />
             </div>
             <div style={{ flex: 1, textAlign: 'inherit' }}>
-              <h3 style={{ marginBottom: 0 }}>{item.name}</h3>
-              <p style={{ color: 'var(--secondary)', fontSize: '0.9rem' }}>฿{item.price} | Stock: {item.stock}</p>
+              <h3 style={{ marginBottom: '0.5rem' }}>{item.name}</h3>
+              <p style={{ color: 'var(--secondary)', fontSize: '1rem', fontWeight: '500' }}>
+                ฿{item.price} | {t('available')}: {item.stock}
+              </p>
+              <p style={{ fontSize: '0.9rem', marginTop: '0.5rem', color: 'var(--secondary)', opacity: 0.8 }}>
+                {item.description}
+              </p>
             </div>
             <button className="btn-outline w-mobile-full" onClick={() => startEdit(item)}>Edit</button>
           </div>
