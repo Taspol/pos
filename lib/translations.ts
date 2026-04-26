@@ -141,7 +141,7 @@ export const translations = {
     promotion_title: "โปรโมชั่นพิเศษ! 🎉",
     promotion_desc: "สั่งซื้อเกิน 50 ฿! สุ่มรับสินค้าพรีเมียมฟรี",
     random_btn: "สุ่มของแถมเลย!",
-    congrats: "ยินดีด้วย! คุณได้รับ:",
+    congrats: "ยินดีด้วย! คุณได้รับ",
     free: "ฟรี",
     continue_checkout: "ไปหน้าชำระเงิน",
     upload_slip: "อัปโหลดหลักฐานการโอน",
