@@ -82,7 +82,7 @@ export const translations = {
     track_order: "ติดตามคำสั่งซื้อของคุณ",
     nickname: "ชื่อเล่น",
     contact: "ข้อมูลติดต่อ",
-    contact_type: "ช่องทางการติดต่อ",
+    contact_type: "ช่องทาง",
     line_id: "Line ID",
     ig: "Instagram",
     phone_no: "เบอร์โทรศัพท์",

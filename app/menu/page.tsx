@@ -73,7 +73,7 @@ export default function Menu() {
 
       {/* Promotion Banner */}
       <div className="card mb-6" style={{ 
-        background: 'linear-gradient(135deg, var(--primary) 0%, #818cf8 100%)', 
+        background: 'linear-gradient(135deg, #f97316 0%, #fbbf24 100%)', 
         color: 'white',
         border: 'none',
         display: 'flex',
@@ -82,7 +82,6 @@ export default function Menu() {
         padding: '1rem 1.5rem',
         animation: 'scaleUp 0.5s ease-out'
       }}>
-        <div style={{ fontSize: '2rem' }}>🎁</div>
         <div>
           <h3 style={{ margin: 0, fontSize: '1.1rem', color: 'white' }}>{t('promotion_title')}</h3>
           <p style={{ margin: 0, fontSize: '0.9rem', opacity: 0.9 }}>{t('promotion_desc')}</p>

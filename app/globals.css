@@ -1,24 +1,24 @@
 :root {
-  --background: #f8fafc;
-  --foreground: #0f172a;
-  --primary: #6366f1;
-  --primary-hover: #4f46e5;
-  --secondary: #64748b;
-  --accent: #f59e0b;
+  --background: #fffcf9;
+  --foreground: #431407;
+  --primary: #fb923c;
+  --primary-hover: #f97316;
+  --secondary: #9a3412;
+  --accent: #ffedd5;
   --card-bg: #ffffff;
-  --border: #e2e8f0;
-  --radius: 12px;
-  --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --border: #fed7aa;
+  --radius: 16px;
+  --shadow: 0 4px 12px -2px rgba(251, 146, 60, 0.15);
   --font-sans: "Playpen Sans Thai", var(--font-geist-sans), Inter, system-ui, -apple-system, sans-serif;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0f172a;
-    --foreground: #f8fafc;
-    --card-bg: #1e293b;
-    --border: #334155;
-    --shadow: 0 10px 15px -3px rgb(0 0 0 / 0.3);
+    --background: #1c0a00;
+    --foreground: #fff7ed;
+    --card-bg: #2d1305;
+    --border: #431407;
+    --shadow: 0 10px 15px -3px rgb(0 0 0 / 0.5);
   }
 }
 
