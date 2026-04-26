@@ -1,0 +1,92 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ---------------------------------------------------------
+// 1. Shop Data
+// ---------------------------------------------------------
+model Shop {
+  id      Int    @id @default(1)
+  name    String
+  details String
+}
+
+// ---------------------------------------------------------
+// 2. Item Data (Inventory)
+// ---------------------------------------------------------
+model Item {
+  id          Int         @id @default(autoincrement())
+  name        String
+  price       Float
+  stock       Int
+  photo       String
+  description String
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  orderItems  OrderItem[]
+}
+
+// ---------------------------------------------------------
+// 3. Order & Order Items
+// ---------------------------------------------------------
+enum OrderStatus {
+  PENDING
+  AWAITING_PAYMENT
+  PAID_AWAITING_APPROVAL
+  COMPLETED
+  CANCELLED
+}
+
+model Order {
+  id               String        @id @default(uuid())
+  customerNickname String
+  customerContact  String
+  
+  total            Float
+  receiveMethod    String
+  paymentOption    String
+  lat              Float?
+  lng              Float?
+  locationDetail   String?
+  slipPath         String?
+  status           OrderStatus   @default(PENDING)
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+  
+  items            OrderItem[]
+  messages         Message[]
+}
+
+model OrderItem {
+  id              Int    @id @default(autoincrement())
+  orderId         String
+  order           Order  @relation(fields: [orderId], references: [id])
+  
+  itemId          Int
+  item            Item   @relation(fields: [itemId], references: [id])
+  
+  quantity        Int
+  priceAtPurchase Float  
+}
+
+// ---------------------------------------------------------
+// 4. Chat Messages
+// ---------------------------------------------------------
+enum SenderRole {
+  CUSTOMER
+  ADMIN
+}
+
+model Message {
+  id        Int        @id @default(autoincrement())
+  orderId   String
+  order     Order      @relation(fields: [orderId], references: [id])
+  sender    SenderRole
+  text      String
+  createdAt DateTime   @default(now())
+}
