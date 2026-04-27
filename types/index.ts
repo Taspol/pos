@@ -59,6 +59,7 @@ export interface POSContextType {
   messages: Message[];
   addMessage: (orderId: string, sender: 'customer' | 'admin', text: string) => Promise<void>;
   fetchMessagesForOrder: (orderId: string) => Promise<void>;
+  updateOrderFreeItem: (orderId: string, newItemId: number) => Promise<void>;
   language: 'en' | 'th';
   setLanguage: (lang: 'en' | 'th') => void;
   t: (key: string) => string;

@@ -8,11 +8,13 @@ export default function AdminOrders() {
 
   return (
     <div>
-      <div className="flex flex-col-mobile justify-between items-center mb-6 gap-4">
+      <div className="flex flex-col-mobile justify-between items-center mb-20 gap-4">
         <h1 style={{ marginBottom: 0 }}>Incoming Orders</h1>
-        <Link href="/admin/items" className="">
-          {t('manage_items')}
-        </Link>
+        <div className="flex gap-2">
+          <Link href="/admin/summary" className="btn-outline">
+            View Summary
+          </Link>
+        </div>
       </div>
 
       {orders.length === 0 ? (

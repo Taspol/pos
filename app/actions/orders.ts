@@ -165,3 +165,39 @@ export async function deleteOrder(orderId: string) {
   
   revalidatePath('/admin/orders');
 }
+
+export async function updateOrderFreeItem(orderId: string, newItemId: number) {
+  await prisma.$transaction(async (tx) => {
+    // 1. Find the current free item (priceAtPurchase = 0)
+    const currentFreeItem = await tx.orderItem.findFirst({
+      where: { orderId, priceAtPurchase: 0 }
+    });
+
+    if (currentFreeItem) {
+      // 2. Restore stock for the old free item
+      await tx.item.update({
+        where: { id: currentFreeItem.itemId },
+        data: { stock: { increment: 1 } }
+      });
+
+      // 3. Update the order item to the new item
+      await tx.orderItem.update({
+        where: { id: currentFreeItem.id },
+        data: { itemId: newItemId }
+      });
+    } else {
+      // If no free item exists, maybe create one? 
+      // But the request implies changing an existing one.
+      throw new Error("No free item found in this order");
+    }
+
+    // 4. Decrement stock for the new item
+    await tx.item.update({
+      where: { id: newItemId },
+      data: { stock: { decrement: 1 } }
+    });
+  });
+
+  revalidatePath(`/admin/orders/${orderId}`);
+  revalidatePath('/admin/orders');
+}

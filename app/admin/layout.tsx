@@ -12,6 +12,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
   const pathname = usePathname();
 
   const navItems = [
+    { name: 'Summary', path: '/admin/summary' },
     { name: 'Orders', path: '/admin' },
     { name: 'Inventory', path: '/admin/items' },
     { name: 'Shop Settings', path: '/admin/shop' },

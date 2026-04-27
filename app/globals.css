@@ -130,6 +130,11 @@ input:focus {
 .gap-12 { gap: 3rem; }
 .mt-4 { margin-top: 1rem; }
 .mb-4 { margin-bottom: 1rem; }
+.mb-6 { margin-bottom: 1.5rem; }
+.mb-10 { margin-bottom: 2.5rem; }
+.mb-16 { margin-bottom: 4rem; }
+.mb-20 { margin-bottom: 5rem; }
+.mb-24 { margin-bottom: 6rem; }
 .w-full { width: 100%; }
 
 .grid {
@@ -184,6 +189,10 @@ input:focus {
   border-right: 1px solid var(--border);
   padding: 2rem 1rem;
   flex-shrink: 0;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
 }
 
 .admin-logo {
@@ -231,6 +240,7 @@ input:focus {
 
   .admin-sidebar {
     width: 100%;
+    height: auto;
     border-right: none;
     border-bottom: 1px solid var(--border);
     padding: 0.75rem 1rem;
@@ -239,6 +249,7 @@ input:focus {
     z-index: 100;
     backdrop-filter: blur(8px);
     background: rgba(255, 255, 255, 0.9);
+    overflow-y: visible;
   }
 
   .admin-logo {
@@ -247,13 +258,9 @@ input:focus {
 
   .admin-nav {
     flex-direction: row;
-    overflow-x: auto;
+    flex-wrap: wrap;
     padding-bottom: 0.5rem;
-    scrollbar-width: none; /* Hide scrollbar for clean look */
-  }
-
-  .admin-nav::-webkit-scrollbar {
-    display: none;
+    gap: 0.5rem;
   }
 
   .admin-nav-link {

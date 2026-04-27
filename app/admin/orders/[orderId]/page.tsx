@@ -14,9 +14,10 @@ const LocationPicker = dynamic(() => import('@/components/LocationPicker'), {
 export default function AdminOrderDetails() {
   const params = useParams();
   const orderId = params.orderId as string;
-  const { orders, messages, addMessage, updateOrderStatus, deleteOrder, t, fetchMessagesForOrder } = usePOS();
+  const { items, orders, messages, addMessage, updateOrderStatus, deleteOrder, updateOrderFreeItem, t, fetchMessagesForOrder } = usePOS();
   const [order, setOrder] = useState<Order | null>(null);
   const [chatInput, setChatInput] = useState('');
+  const [isUpdatingFree, setIsUpdatingFree] = useState(false);
 
   useEffect(() => {
     const foundOrder = orders.find(ord => ord.id === orderId);
@@ -43,6 +44,19 @@ export default function AdminOrderDetails() {
     if (!chatInput.trim()) return;
     addMessage(orderId, 'admin', chatInput);
     setChatInput('');
+  };
+
+  const handleChangeFreeItem = async (newItemId: number) => {
+    if (confirm('Change the free item for this order?')) {
+      setIsUpdatingFree(true);
+      try {
+        await updateOrderFreeItem(order.id, newItemId);
+      } catch (err) {
+        alert('Failed to update free item');
+      } finally {
+        setIsUpdatingFree(false);
+      }
+    }
   };
 
   return (
@@ -86,12 +100,35 @@ export default function AdminOrderDetails() {
 
           <div className="card">
             <h3>Items</h3>
-            {order.items.map((item, idx) => (
-              <div key={idx} className="flex justify-between mb-1">
-                <span>{item.name} x {item.quantity}</span>
-                <span>฿{item.price * item.quantity}</span>
-              </div>
-            ))}
+            {order.items.map((item, idx) => {
+              const isFree = item.price === 0;
+              return (
+                <div key={idx} className="flex justify-between items-start mb-3">
+                  <div style={{ flex: 1 }}>
+                    <div style={{ fontWeight: '600' }}>{item.name} x {item.quantity}</div>
+                    {isFree && (
+                      <div className="mt-1">
+                        <label style={{ fontSize: '0.75rem', display: 'block', color: 'var(--secondary)' }}>🎁 Edit Free Item:</label>
+                        <select 
+                          className="w-full" 
+                          style={{ fontSize: '0.85rem', padding: '0.4rem', marginTop: '0.2rem' }}
+                          disabled={isUpdatingFree}
+                          value={item.id}
+                          onChange={(e) => handleChangeFreeItem(parseInt(e.target.value))}
+                        >
+                          {items.map(it => (
+                            <option key={it.id} value={it.id}>
+                              {it.name} (Stock: {it.stock})
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                    )}
+                  </div>
+                  <span style={{ marginLeft: '1rem' }}>฿{item.price * item.quantity}</span>
+                </div>
+              );
+            })}
             <hr className="my-2" style={{ border: 'none', borderTop: '1px solid var(--border)', margin: '1rem 0' }} />
             <div className="flex justify-between font-bold" style={{ fontWeight: 700 }}>
               <span>Total</span>

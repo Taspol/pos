@@ -127,7 +127,12 @@ export const POSProvider = ({ children }: POSProviderProps) => {
       language,
       setLanguage,
       t,
-      fetchMessagesForOrder
+      fetchMessagesForOrder,
+      updateOrderFreeItem: async (orderId: string, newItemId: number) => {
+        const { updateOrderFreeItem: apiUpdateFreeItem } = await import('@/app/actions/orders');
+        await apiUpdateFreeItem(orderId, newItemId);
+        await refreshData();
+      }
     }}>
       {children}
     </POSContext.Provider>
