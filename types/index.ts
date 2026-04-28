@@ -46,6 +46,11 @@ export interface Message {
   timestamp: string;
 }
 
+export interface PromotionConfig {
+  id: number;
+  weight: number;
+}
+
 export interface POSContextType {
   shop: Shop;
   updateShop: (newShop: Shop) => Promise<void>;
@@ -62,5 +67,8 @@ export interface POSContextType {
   updateOrderFreeItem: (orderId: string, newItemId: number) => Promise<void>;
   language: 'en' | 'th';
   setLanguage: (lang: 'en' | 'th') => void;
+  promotionItems: PromotionConfig[];
+  updatePromotionItems: (items: PromotionConfig[]) => Promise<void>;
   t: (key: string) => string;
 }
+

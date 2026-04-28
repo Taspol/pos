@@ -7,7 +7,7 @@ import { getDirectImageUrl } from '@/lib/utils';
 import { Item } from '@/types';
 
 export default function Promotion() {
-  const { items, t } = usePOS();
+  const { items, promotionItems, t } = usePOS();
   const router = useRouter();
   const [wonItem, setWonItem] = useState<Item | null>(null);
   const [isSpinning, setIsSpinning] = useState(false);
@@ -28,7 +28,22 @@ export default function Promotion() {
   }, [router]);
 
   const handleRandomize = () => {
-    if (items.length === 0 || isSpinning || wonItem) return;
+    // 1. Filter items based on admin settings
+    let isWeighted = false;
+    let availablePromoItems = items;
+
+    if (promotionItems && promotionItems.length > 0) {
+      isWeighted = true;
+      availablePromoItems = items.filter(item => promotionItems.some(p => p.id === item.id));
+    }
+    
+    // Fallback if somehow no items match the filter but shop has items
+    if (availablePromoItems.length === 0 && items.length > 0) {
+      availablePromoItems = items;
+      isWeighted = false;
+    }
+
+    if (availablePromoItems.length === 0 || isSpinning || wonItem) return;
     
     setIsSpinning(true);
     
@@ -39,8 +54,22 @@ export default function Promotion() {
       
       // Delay the actual reveal slightly
       setTimeout(() => {
-        const randomIndex = Math.floor(Math.random() * items.length);
-        const randomItem = items[randomIndex];
+        let randomItem = availablePromoItems[0];
+
+        if (isWeighted) {
+          const totalWeight = promotionItems.reduce((sum, p) => sum + p.weight, 0);
+          let random = Math.random() * totalWeight;
+          for (const p of promotionItems) {
+            if (random < p.weight) {
+              randomItem = items.find(i => i.id === p.id) || availablePromoItems[0];
+              break;
+            }
+            random -= p.weight;
+          }
+        } else {
+          const randomIndex = Math.floor(Math.random() * availablePromoItems.length);
+          randomItem = availablePromoItems[randomIndex];
+        }
         
         setWonItem(randomItem);
         setIsOpening(false);

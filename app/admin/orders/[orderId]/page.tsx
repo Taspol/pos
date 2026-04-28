@@ -89,7 +89,7 @@ export default function AdminOrderDetails() {
                 onClick={async () => {
                   if (confirm('Are you sure you want to delete this order?')) {
                     await deleteOrder(orderId);
-                    window.location.href = '/admin/orders';
+                    window.location.href = '/admin';
                   }
                 }}
               >

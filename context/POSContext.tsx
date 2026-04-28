@@ -31,6 +31,7 @@ export const POSProvider = ({ children }: POSProviderProps) => {
   const [orders, setOrders] = useState<Order[]>([]);
   const [messages, setMessages] = useState<Message[]>([]);
   const [language, setLanguage] = useState<'en' | 'th'>('th');
+  const [promotionItems, setPromotionItems] = useState<any[]>([]);
 
   const t = useCallback((key: string): string => {
     return (translations[language] as any)[key] || key;
@@ -39,14 +40,17 @@ export const POSProvider = ({ children }: POSProviderProps) => {
   // Function to refresh all data from DB
   const refreshData = useCallback(async () => {
     try {
-      const [shopData, itemsData, ordersData] = await Promise.all([
+      const { getPromotionItems } = await import('@/app/actions/promotion');
+      const [shopData, itemsData, ordersData, promoData] = await Promise.all([
         getShop(),
         getItems(),
-        getOrders()
+        getOrders(),
+        getPromotionItems()
       ]);
       setShop(shopData as Shop);
       setItems(itemsData as Item[]);
       setOrders(ordersData as Order[]);
+      setPromotionItems(promoData);
     } catch (error) {
       console.error("Failed to fetch data:", error);
     }
@@ -132,9 +136,16 @@ export const POSProvider = ({ children }: POSProviderProps) => {
         const { updateOrderFreeItem: apiUpdateFreeItem } = await import('@/app/actions/orders');
         await apiUpdateFreeItem(orderId, newItemId);
         await refreshData();
+      },
+      promotionItems,
+      updatePromotionItems: async (itemsToSave: any[]) => {
+        const { updatePromotionItems: apiUpdatePromotionItems } = await import('@/app/actions/promotion');
+        await apiUpdatePromotionItems(itemsToSave);
+        setPromotionItems(itemsToSave);
       }
     }}>
       {children}
     </POSContext.Provider>
   );
 };
+
