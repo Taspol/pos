@@ -32,6 +32,7 @@ export const POSProvider = ({ children }: POSProviderProps) => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [language, setLanguage] = useState<'en' | 'th'>('th');
   const [promotionItems, setPromotionItems] = useState<any[]>([]);
+  const [orderMetadata, setOrderMetadata] = useState<Record<string, { received: boolean; receivedAt?: string }>>({});
 
   const t = useCallback((key: string): string => {
     return (translations[language] as any)[key] || key;
@@ -41,16 +42,19 @@ export const POSProvider = ({ children }: POSProviderProps) => {
   const refreshData = useCallback(async () => {
     try {
       const { getPromotionItems } = await import('@/app/actions/promotion');
-      const [shopData, itemsData, ordersData, promoData] = await Promise.all([
+      const { getOrderMetadata } = await import('@/app/actions/order_metadata');
+      const [shopData, itemsData, ordersData, promoData, metadata] = await Promise.all([
         getShop(),
         getItems(),
         getOrders(),
-        getPromotionItems()
+        getPromotionItems(),
+        getOrderMetadata()
       ]);
       setShop(shopData as Shop);
       setItems(itemsData as Item[]);
       setOrders(ordersData as Order[]);
       setPromotionItems(promoData);
+      setOrderMetadata(metadata);
     } catch (error) {
       console.error("Failed to fetch data:", error);
     }
@@ -142,6 +146,12 @@ export const POSProvider = ({ children }: POSProviderProps) => {
         const { updatePromotionItems: apiUpdatePromotionItems } = await import('@/app/actions/promotion');
         await apiUpdatePromotionItems(itemsToSave);
         setPromotionItems(itemsToSave);
+      },
+      orderMetadata,
+      toggleOrderReceived: async (orderId: string, received: boolean) => {
+        const { updateOrderReceived } = await import('@/app/actions/order_metadata');
+        await updateOrderReceived(orderId, received);
+        await refreshData();
       }
     }}>
       {children}

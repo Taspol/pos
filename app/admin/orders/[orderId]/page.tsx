@@ -14,7 +14,7 @@ const LocationPicker = dynamic(() => import('@/components/LocationPicker'), {
 export default function AdminOrderDetails() {
   const params = useParams();
   const orderId = params.orderId as string;
-  const { items, orders, messages, addMessage, updateOrderStatus, deleteOrder, updateOrderFreeItem, t, fetchMessagesForOrder } = usePOS();
+  const { items, orders, messages, addMessage, updateOrderStatus, deleteOrder, updateOrderFreeItem, t, fetchMessagesForOrder, orderMetadata, toggleOrderReceived } = usePOS();
   const [order, setOrder] = useState<Order | null>(null);
   const [chatInput, setChatInput] = useState('');
   const [isUpdatingFree, setIsUpdatingFree] = useState(false);

@@ -69,6 +69,9 @@ export interface POSContextType {
   setLanguage: (lang: 'en' | 'th') => void;
   promotionItems: PromotionConfig[];
   updatePromotionItems: (items: PromotionConfig[]) => Promise<void>;
+  orderMetadata: Record<string, { received: boolean; receivedAt?: string }>;
+  toggleOrderReceived: (orderId: string, received: boolean) => Promise<void>;
   t: (key: string) => string;
 }
+
 
