@@ -4,12 +4,19 @@ import { usePOS } from '@/context/POSContext';
 import Link from 'next/link';
 
 export default function AdminSummary() {
-  const { orders, items, t } = usePOS();
+  const { orders, items, t, orderMetadata } = usePOS();
 
   // Basic Stats
   const totalOrders = orders.length;
-  const completedOrders = orders.filter(o => o.status === 'completed').length;
+  const completedOrdersList = orders.filter(o => o.status === 'completed');
+  const completedOrders = completedOrdersList.length;
   const totalRevenue = orders.reduce((sum, ord) => sum + ord.total, 0);
+
+  // Received Stats
+  const receivedOrdersList = completedOrdersList.filter(o => orderMetadata[o.id]?.received);
+  const receivedOrders = receivedOrdersList.length;
+  const receivedRevenue = receivedOrdersList.reduce((sum, ord) => sum + ord.total, 0);
+  const receivedWeight = totalOrders > 0 ? (receivedOrders / totalOrders) * 100 : 0;
   
   // Calculate Items Sold and Revenue per item
   const itemStats = items.map(item => {
@@ -40,26 +47,34 @@ export default function AdminSummary() {
       </div>
 
       {/* Main Stats Cards */}
-      <div className="grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '1.5rem' }}>
+      <div className="grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1.5rem' }}>
         <div className="card" style={{ border: '1px solid var(--border)' }}>
           <p style={{ fontSize: '0.85rem', color: 'var(--secondary)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Total Revenue</p>
-          <h2 style={{ fontSize: '2.2rem', margin: '0.5rem 0', color: 'var(--foreground)' }}>
+          <h2 style={{ fontSize: '2rem', margin: '0.5rem 0', color: 'var(--foreground)' }}>
             ฿{totalRevenue.toLocaleString()}
           </h2>
           <p style={{ fontSize: '0.8rem', opacity: 0.6 }}>From {totalOrders} total orders</p>
         </div>
 
         <div className="card" style={{ border: '1px solid var(--border)' }}>
-          <p style={{ fontSize: '0.85rem', color: 'var(--secondary)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Success Rate</p>
-          <h2 style={{ fontSize: '2.2rem', margin: '0.5rem 0', color: 'var(--foreground)' }}>
+          <p style={{ fontSize: '0.85rem', color: 'var(--secondary)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Payment Status</p>
+          <h2 style={{ fontSize: '2rem', margin: '0.5rem 0', color: '#10b981' }}>
             {totalOrders > 0 ? Math.round((completedOrders / totalOrders) * 100) : 0}%
           </h2>
-          <p style={{ fontSize: '0.8rem', opacity: 0.6 }}>{completedOrders} completed orders</p>
+          <p style={{ fontSize: '0.8rem', opacity: 0.6 }}>{completedOrders} completed payments</p>
+        </div>
+
+        <div className="card" style={{ border: '2px solid #10b981', background: '#f0fdf4' }}>
+          <p style={{ fontSize: '0.85rem', color: '#166534', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Received Revenue</p>
+          <h2 style={{ fontSize: '2rem', margin: '0.5rem 0', color: '#166534' }}>
+            ฿{receivedRevenue.toLocaleString()}
+          </h2>
+          <p style={{ fontSize: '0.8rem', color: '#15803d' }}>From {receivedOrders} verified items</p>
         </div>
 
         <div className="card" style={{ border: '1px solid var(--border)' }}>
           <p style={{ fontSize: '0.85rem', color: 'var(--secondary)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Average Order</p>
-          <h2 style={{ fontSize: '2.2rem', margin: '0.5rem 0', color: 'var(--foreground)' }}>
+          <h2 style={{ fontSize: '2rem', margin: '0.5rem 0', color: 'var(--foreground)' }}>
             ฿{totalOrders > 0 ? Math.round(totalRevenue / totalOrders).toLocaleString() : 0}
           </h2>
           <p style={{ fontSize: '0.8rem', opacity: 0.6 }}>Per transaction</p>
