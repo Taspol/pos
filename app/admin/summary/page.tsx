@@ -18,12 +18,12 @@ export default function AdminSummary() {
   const receivedRevenue = receivedOrdersList.reduce((sum, ord) => sum + ord.total, 0);
   const receivedWeight = totalOrders > 0 ? (receivedOrders / totalOrders) * 100 : 0;
   
-  // Calculate Items Sold and Revenue per item
+  // Calculate Items Sold and Revenue per item (ONLY FOR RECEIVED ORDERS)
   const itemStats = items.map(item => {
     let soldCount = 0;
     let itemRevenue = 0;
     
-    orders.forEach(order => {
+    receivedOrdersList.forEach(order => {
       const orderItem = order.items.find(oi => oi.id === item.id);
       if (orderItem) {
         soldCount += orderItem.quantity;
@@ -38,12 +38,55 @@ export default function AdminSummary() {
     };
   }).sort((a, b) => b.soldCount - a.soldCount);
 
-  const topSellers = itemStats.slice(0, 5).filter(s => s.soldCount > 0);
+  const topSellers = itemStats.filter(s => s.soldCount > 0);
+
+  const downloadCSV = () => {
+    const headers = ['Order ID', 'Date', 'Customer', 'Contact', 'Items', 'Total (฿)', 'Status', 'Received'];
+    const rows = orders.map(order => {
+      const isReceived = orderMetadata[order.id]?.received ? 'TRUE' : 'FALSE';
+      const itemsJson = JSON.stringify(order.items.map(i => ({ name: i.name, quantity: i.quantity, price: i.price })));
+      const date = new Date(order.timestamp).toLocaleString();
+      
+      return [
+        order.id,
+        `"${date}"`,
+        `"${order.customer.nickname}"`,
+        `"${order.customer.contact}"`,
+        `"${itemsJson.replace(/"/g, '""')}"`,
+        order.total,
+        order.status.toUpperCase(),
+        isReceived
+      ];
+    });
+    
+    const csvContent = [
+      headers.join(','),
+      ...rows.map(r => r.join(','))
+    ].join('\n');
+    
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    link.setAttribute('href', url);
+    link.setAttribute('download', `orders_summary_${new Date().toISOString().split('T')[0]}.csv`);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
 
   return (
     <div className="flex flex-col gap-8">
       <div className="flex flex-col-mobile justify-between items-center gap-4">
         <h1 style={{ marginBottom: 0 }}>Sales Summary</h1>
+        <div className="flex gap-2">
+          <button onClick={downloadCSV} className="btn-primary" style={{ background: '#10b981' }}>
+            Download CSV
+          </button>
+          <Link href="/admin" className="btn-outline">
+            Back to Orders
+          </Link>
+        </div>
       </div>
 
       {/* Main Stats Cards */}
@@ -84,7 +127,7 @@ export default function AdminSummary() {
       <div className="responsive-grid">
         {/* Top Sellers Table */}
         <div className="card" style={{ border: '1px solid var(--border)' }}>
-          <h3 className="mb-4" style={{ fontSize: '1.1rem' }}>Top Selling Items</h3>
+          <h3 className="mb-4" style={{ fontSize: '1.1rem' }}>Top Selling Items (Received)</h3>
           {topSellers.length === 0 ? (
             <p style={{ color: 'var(--secondary)', textAlign: 'center', padding: '2rem' }}>No items sold yet.</p>
           ) : (
